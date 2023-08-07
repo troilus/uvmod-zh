@@ -382,13 +382,13 @@ modClasses = [
     ,
     class Mod_FrequencyRangeSimple extends FirmwareMod {
         constructor() {
-            super("更大的频率范围", "将 RX 的频段 1 下限更改为 18 MHz，将频段 7 的上限更改为 999 MHz。TX 范围不受影响。", 0);
+            super("更大的频率范围", "将 RX 的频段 1 下限更改为 18 MHz，将频段 7 的上限更改为 1300 MHz。TX 范围不受影响。", 0);
         }
 
         apply(firmwareData) {
             const offset = 0xe074;
             const oldData = hexString("404b4c0080cba4000085cf00c0800901c00e1602005a6202c029cd0280f77300f684cf00b6800901b60e1602f6596202b629cd0200879303");
-            const newData = hexString("40771b0080cba4000085cf00c0800901c00e1602005a6202c029cd0280f77300f684cf00b6800901b60e1602f6596202b629cd02f6e0f505");
+            const newData = hexString("40771b0080cba4000085cf00c0800901c00e1602005a6202c029cd0280f77300f684cf00b6800901b60e1602f6596202b629cd0280a4bf07");
             if (compareSection(firmwareData, oldData, offset)) {
                 firmwareData = replaceSection(firmwareData, newData, offset);
                 log(`Success: ${this.name} applied.`);
