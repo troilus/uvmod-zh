@@ -136,7 +136,7 @@ modClasses = [
     ,
     class Mod_EnableTXEverywhere extends FirmwareMod {
         constructor() {
-            super("Enable TX everywhere", "DANGER! Allows transmitting on all frequencies. Only use this mod for testing, do not transmit on illegal frequencies!", 0);
+            super("允许全频段发射", "危险! 允许在所有频率上发射。仅使用此 Mod 进行测试，禁止在非法频率上发射！", 0);
             this.hidden = true;
         }
 
@@ -158,7 +158,7 @@ modClasses = [
     ,
     class Mod_EnableTXEverywhereButAirBand extends FirmwareMod {
         constructor() {
-            super("Enable TX everywhere except Air Band", "DANGER! Allows transmitting on all frequencies except air band (118 - 137 MHz). Only use this mod for testing, do not transmit on illegal frequencies!", 0);
+            super("允许除航空段的全频段发射", "危险! 允许在除航空段 (118 - 137 MHz)的所有频率上发射。仅使用此 Mod 进行测试，禁止在非法频率上发射！", 0);
             this.hidden = true;
         }
 
