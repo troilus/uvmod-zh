@@ -90,7 +90,7 @@ modClasses = [
     ,
     class Mod_FreqCopyTimeout extends FirmwareMod {
         constructor() {
-            super("禁用频率复制超时", "防止频率复制和 CTCSS 解码器因“扫描失败”而超时，允许这两个功能无限期运行，直到找到信号。", 0);
+            super("禁用扫频超时", "防止扫频和 CTCSS 解码器因“扫描失败”而超时，允许这两个功能无限期运行，直到找到信号。", 0);
         }
 
         apply(firmwareData) {
