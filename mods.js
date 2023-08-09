@@ -1,7 +1,11 @@
 modClasses = [
     class Mod_Example extends FirmwareMod {
         constructor() {
+
             super("示例Mod", "这个 Mod 什么用都没有，被用作实现新 Mod 的示例", 0); // Add name, description and size (additional flash used, 0 for most mods)
+
+
+            this.hidden = true; // Set this to true for high-risk mods such as the "Enable TX everywhere" mod
 
             // Customize the mod-specific div with input elements
             // There is a helper function for adding input fields easily:
@@ -130,6 +134,44 @@ modClasses = [
         }
     }
     ,
+    class Mod_EnableTXEverywhere extends FirmwareMod {
+        constructor() {
+            super("Enable TX everywhere", "DANGER! Allows transmitting on all frequencies. Only use this mod for testing, do not transmit on illegal frequencies!", 0);
+            this.hidden = true;
+        }
+
+        apply(firmwareData) {
+            const offset = 0x180e;
+            const oldData = hexString("cf2a");
+            const newData = hexString("5de0");
+            if (compareSection(firmwareData, oldData, offset)) {
+                firmwareData = replaceSection(firmwareData, newData, offset);
+                log(`Success: ${this.name} applied.`);
+            }
+            else {
+                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            }
+
+            return firmwareData;
+        }
+    }
+    ,
+    class Mod_EnableTXEverywhereButAirBand extends FirmwareMod {
+        constructor() {
+            super("Enable TX everywhere except Air Band", "DANGER! Allows transmitting on all frequencies except air band (118 - 137 MHz). Only use this mod for testing, do not transmit on illegal frequencies!", 0);
+            this.hidden = true;
+        }
+
+        apply(firmwareData) {
+            const offset = 0x1804;
+            const newData = hexString("f0b5014649690968054a914205d3054a914202d20020c04301e00020ffe7f0bdc00db400a00bd100");
+            firmwareData = replaceSection(firmwareData, newData, offset);
+            log(`Success: ${this.name} applied.`);
+
+            return firmwareData;
+        }
+    }
+    ,
     class Mod_DoubleBacklightDuration extends FirmwareMod {
         constructor() {
             super("双倍背光持续时间", "设置的背光持续时间乘以 2。设置值 5 将对应于 10 秒的背光。", 0);
@@ -192,7 +234,7 @@ modClasses = [
             { "offset": 56778, "description": "power on screen", "size": 6, "string": "PONMSG" }, { "offset": 56785, "description": "end of talk tone", "size": 6, "string": "ROGER" }, { "offset": 56792, "description": "battery voltage", "size": 6, "string": "VOL" }, { "offset": 56799, "description": "enable AM reception on AM bands", "size": 6, "string": "AM" },
             { "offset": 56806, "description": "enable NOAA scan", "size": 6, "string": "NOAA_S" }, { "offset": 56813, "description": "delete channel", "size": 6, "string": "DEL-CH" }, { "offset": 56820, "description": "reset radio", "size": 6, "string": "RESET" }, { "offset": 56827, "description": "enable tx on 350mhz band", "size": 6, "string": "350TX" },
             { "offset": 56834, "description": "limit to local ham frequencies", "size": 6, "string": "F-LOCK" }, { "offset": 56841, "description": "enable tx on 200mhz band", "size": 6, "string": "200TX" }, { "offset": 56848, "description": "enable tx on 500mhz band", "size": 6, "string": "500TX" },
-            { "offset": 56855, "description": "enable 350mhz band", "size": 6, "string": "350EN" }, { "offset": 56862, "description": "enable scrambler option", "size": 6, "string": "SCREN" }, { "offset": 56869, "description": "battery saver: off", "size": 3, "string": "OFF" }, { "offset": 56873, "description": "battery saver: 1:1", "size": 3, "string": "1:1" },
+            { "offset": 56855, "description": "enable 350mhz band", "size": 6, "string": "350EN" }, { "offset": 56862, "description": "enable scrambler option", "size": 6, "string": "SCRMBL" }, { "offset": 56869, "description": "battery saver: off", "size": 3, "string": "OFF" }, { "offset": 56873, "description": "battery saver: 1:1", "size": 3, "string": "1:1" },
             { "offset": 56877, "description": "battery saver: 1:2", "size": 3, "string": "1:2" }, { "offset": 56881, "description": "battery saver: 1:3", "size": 3, "string": "1:3" }, { "offset": 56885, "description": "battery saver: 1:4", "size": 3, "string": "1:4" }, { "offset": 56889, "description": "tx power: low", "size": 4, "string": "LOW" },
             { "offset": 56894, "description": "tx power: mid", "size": 4, "string": "MID" }, { "offset": 56899, "description": "tx power: high", "size": 4, "string": "HIGH" }, { "offset": 56904, "description": "bandwidth: wide", "size": 6, "string": "WIDE" }, { "offset": 56911, "description": "bandwidth: narrow", "size": 6, "string": "NARROW" },
             { "offset": 56918, "description": "multiple options 1: off", "size": 6, "string": "OFF" }, { "offset": 56925, "description": "multiple options 1: chan a", "size": 6, "string": "CHAN_A" }, { "offset": 56932, "description": "multiple options 1: chan b", "size": 6, "string": "CHAN_B" },
@@ -202,7 +244,7 @@ modClasses = [
             { "offset": 56982, "description": "scan mode: stay while signal", "size": 2, "string": "CO" }, { "offset": 56985, "description": "scan mode: stop on signal", "size": 2, "string": "SE" }, { "offset": 56988, "description": "channel display mode: freq", "size": 4, "string": "FREQ" },
             { "offset": 56993, "description": "channel display mode: chan", "size": 4, "string": "CHAN" }, { "offset": 56998, "description": "channel display mode: name", "size": 4, "string": "NAME" }, { "offset": 57003, "description": "tx shift direction: off", "size": 4, "string": "OFF" },
             { "offset": 57007, "description": "tx shift direction: +", "size": 4, "string": "+" }, { "offset": 57011, "description": "tx shift direction: -", "size": 4, "string": "-" }, { "offset": 57015, "description": "alarm mode: local", "size": 4, "string": "SITE" }, { "offset": 57020, "description": "alarm mode: local + remote", "size": 4, "string": "TONE" },
-            { "offset": 57025, "description": "power on screen: full", "size": 4, "string": "FULL" }, { "offset": 57030, "description": "power on screen: custom message", "size": 4, "string": "MSG" }, { "offset": 57035, "description": "power on screen: batt voltage", "size": 4, "string": "VOL" },
+            { "offset": 57025, "description": "power on screen: full", "size": 4, "string": "FULL" }, { "offset": 57030, "description": "power on screen: custom message", "size": 4, "string": "MSG" }, { "offset": 57035, "description": "power on screen: batt voltage", "size": 4, "string": "BATT" },
             { "offset": 57040, "description": "reset: keep channel parameters", "size": 3, "string": "VFO" }, { "offset": 57044, "description": "reset: reset everything", "size": 3, "string": "ALL" }, { "offset": 57048, "description": "dtmf response: nothing", "size": 5, "string": "NULL" },
             { "offset": 57054, "description": "dtmf response: local ring", "size": 5, "string": "RING" }, { "offset": 57060, "description": "dtmf response: auto call back", "size": 5, "string": "REPLY" }, { "offset": 57066, "description": "dtmf response: ring and call", "size": 5, "string": "BOTH" },
             { "offset": 57072, "description": "end of talk tone: off", "size": 5, "string": "OFF" }, { "offset": 57078, "description": "end of talk tone: classic beep", "size": 5, "string": "ROGER" }, { "offset": 57084, "description": "end of talk tone: MDC ID sound", "size": 5, "string": "MDC" },
@@ -239,7 +281,9 @@ modClasses = [
     ,
     class Mod_MicGain extends FirmwareMod {
         constructor() {
-            super("增加麦克风增益", "为麦克风增益提供额外的提升。您仍然可以在菜单中微调麦克风增益，但它比没有该 Mod 时更响亮", 0);
+
+            super("增加麦克风增益", "为麦克风增益提供额外的提升，使麦克风更灵敏", 0);
+
         }
 
         apply(firmwareData) {
@@ -448,7 +492,8 @@ modClasses = [
     ,
     class Mod_NOAAFrequencies extends FirmwareMod {
         constructor() {
-            super("NOAA 频率", "NOAA 扫描功能是独一无二的，因为它可以一直进行后台扫描。但是，大多数人不需要天气警报，或者他们的国家没有NOAA。这个 Mod 让你改变频率，这样你就可以使用NOAA扫描功能做其他事情。以下值预设为前 10 个 PMR446 通道。", 0);
+
+            super("NOAA 频率", "NOAA 扫描功能是独一无二的，因为它可以一直进行后台扫描。但是，大多数人不需要天气警报，或者他们的国家没有NOAA。这个 Mod 让你改变频率，但注意手台需要1050 Hz 才能激活，这样你就可以使用NOAA扫描功能做其他事情。以下值预设为前 10 个 PMR446 通道。", 0);
             this.inputFreq1 = addInputField(this.modSpecificDiv,   "频率1 (Hz)", "446006250");
             this.inputFreq2 = addInputField(this.modSpecificDiv,   "频率2 (Hz)", "446018750");
             this.inputFreq3 = addInputField(this.modSpecificDiv,   "频率3 (Hz)", "446031250");
@@ -459,6 +504,7 @@ modClasses = [
             this.inputFreq8 = addInputField(this.modSpecificDiv,   "频率8 (Hz)", "446093750");
             this.inputFreq9 = addInputField(this.modSpecificDiv,   "频率9 (Hz)", "446106250");
             this.inputFreq10 = addInputField(this.modSpecificDiv,  "频率10 (Hz)", "446118750");
+
         }
 
         apply(firmwareData) {
@@ -499,7 +545,9 @@ modClasses = [
     ,
     class Mod_AMOnAllBands extends FirmwareMod {
         constructor() {
-            super("所有频段启用AM", "出于某种原因，原始固件仅允许AM设置在F2频段上工作。这个 Mod 允许AM在任何频段上工作。", 0);
+
+            super("所有频段启用AM接收", "出于某种原因，原始固件仅允许AM设置在F2频段上工作。这个 Mod 允许AM接收在任何频段上工作。", 0);
+
         }
 
         apply(firmwareData) {
