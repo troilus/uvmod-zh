@@ -9,7 +9,7 @@
   <meta property="og:site_name" content=UVMOD>
   <meta property="og:url" content=https://whosmatt.github.io/uvmod />
   <meta property="og:description"
-    content="Web-based tool to generate customizable modded firmware for various Quansheng handheld radios.">
+    content="Web-based tool to generate and flash customizable modded firmware for various Quansheng handheld radios.">
   <meta property="og:type" content=website>
   <meta property="og:image" content=https://whosmatt.github.io/uvmod/img/banner.webp>
 
@@ -123,7 +123,8 @@
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 id="logo" class="h3 mb-0 text-white" style="text-shadow: 0px 0px 5px #ffffffa6; font-size: 3em;">UVMOD
             </h1>
-            <button class="d-none d-sm-inline-block btn btn-sm btn-light shadow-lg" type="button" data-toggle="collapse"
+
+            <button class="d-sm-inline-block btn btn-sm btn-light shadow-lg" type="button" data-toggle="collapse"
               data-target="#instructions">&nbsp;显示说明&nbsp;</button>
           </div>
 
@@ -145,13 +146,28 @@
                     <li>单击“保存”以下载打包完成的固件文件。</li>
                   </ol>
 
-                  <h3 class="mt-4">刷机</h3>
+
+
+
+                  <h3 class="mt-4">直接使用UVMOD刷机</h3>
+                  <p>基于 Chromium 的浏览器（如 Chrome、Edge 和 Opera）内置 API允许UVMOD将固件直接刷新到电台。这是最简单的凡事，但仅适用于Windows和Linux。</p>
+                  <p>在 Windows 上，你需要使用包含ch340、ch341 或 cp210x 芯片的刷机线。在 Linux 上，通常已经包含了相关驱动。</p>
+                  <ol>
+                    <li>将刷机线连接到计算机，并确保安装了正确的驱动程序，正确的会显示 com 端口。</li>
+                    <li>在断开连接并关闭的手台上，按住PTT的同时打开手台。此时手电筒应该打开且屏幕为关闭保状态，手台处于刷机模式。</li>
+                    <li>将刷机线连接到手台。</li>
+                    <li>点击 "网页刷机" 并等待结束，相关信息会在控制台中显示。</li>
+                    <li>全部完成，您的所有设置仍应保持不变。</li>
+                  </ol>
+
+                  <h3 class="mt-4">使用官方工具刷机</h3>
                   <p>如果您使用Windows，则可以使用官方更新程序工具。您可以直接从UVMOD控制台窗口中的链接下载使用。</p>
+
                   <ol>
                     <li>将刷机线连接到计算机，并确保安装了正确的驱动程序。在设备管理器，它应该显示为COM端口。</li>
                     <li>启动更新程序工具，选择 COM 端口，然后单击连接。</li>
                     <li>加载自定义固件。</li>
-                    <li>在断开连接并关闭的手台上，按住PTT的同时打开手台。此时手电筒应该打开且屏幕为关闭保状态，此时手台处于刷机模式。</li>
+                    <li>在断开连接并关闭的手台上，按住PTT的同时打开手台。此时手电筒应该打开且屏幕为关闭保状态，手台处于刷机模式。</li>
                     <li>将刷机线连接到手台。更新程序工具中的“更新”按钮现在应该变得可点击。</li>
                     <li>单击更新并等待工具完成。</li>
                     <li>全部完成，您的所有设置仍应保持不变。</li>
@@ -164,11 +180,13 @@
                     <li>以非法频率发射会导致巨额罚款甚至入狱。</li>
                     <li>无线电硬件仅设计用于VHF和UHF。在其他频率上启用 TX 不会改变这一情况。在VHF和UHF频段之外的频率上将具有非常低的输出功率和非常高的SWR，这可能会损坏设备。同时设备会输出大量的杂散、杂散甚至比载波信号强。
                       <b>例如，在CB频段上传输将在CB（微瓦）上传输无用的功率，同时在其他几个频率上发射大量功率。 </b></li>
-                    </li>
+
+
                     <li>你对自己的行为负全部责任！</li>
                   </ul>
                   <p>如果同意这些警告和条款，现在可以通过<a onclick="showHiddenMods()" class="card-link" style="cursor: pointer;"><b>单击此处</b></a>显示隐藏的 Mod。 </p>
                   <p>Mod 将显示在列表中，并带有红色边框和标题。</p>
+
                 </div>
 
               </div>
@@ -186,7 +204,9 @@
                     <h6 class="m-0 font-weight-bold text-primary">Mods</h6>
                   </div>
                   <a style="line-height: 1 !important;" target="_blank" rel="nofollow"
-                    href="https://github.com/whosmatt/UV-K5-patcher">贡献 Mods &rarr;</a>
+
+                    href="https://github.com/whosmatt/uvmod">贡献 Mods &rarr;</a>
+
                 </div>
                 <div id="modsContainer" class="card-body">
                 </div>
@@ -250,7 +270,7 @@
                       <span class="icon text-white-50">
                         <i class="fab fa-usb"></i>
                       </span>
-                      <span class="text w-100">Coming soon</span>
+                      <span class="text w-100">网页刷机</span>
                     </a>
                   </div>
                 </div>
