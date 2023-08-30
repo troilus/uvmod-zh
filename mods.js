@@ -642,7 +642,7 @@ modClasses = [
 
             // add a brief explanation
             const explanation = document.createElement("p");
-            explanation.innerText = "在这里修改频率范围，注意品各频段频率顺序正确、不要有重叠。 最大范围是 18 MHz to 1300 MHz，并且 630 - 840 MHz 由于芯片硬件限制实际无法收发。";
+            explanation.innerText = "在这里修改频率范围，注意各频段频率顺序正确、不要有重叠。 最大范围是 18 MHz to 1300 MHz，并且 630 - 840 MHz 由于芯片硬件限制实际无法收发。";
             customModeDiv.appendChild(explanation);
 
             this.band1L = addInputField(customModeDiv, "频段 1(F1) 下限频率 (Hz)", "50000000");
