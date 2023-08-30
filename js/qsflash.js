@@ -121,11 +121,18 @@ async function readPacket(port, expectedData, timeout = 1000) {
                 if (done) {
                     // If `done` is true, then the reader has been cancelled
                     reject('Reader has been cancelled.');
+                    console.log('Reader has been cancelled. Current Buffer:', buffer, uint8ArrayToHexString(buffer));
                     return;
                 }
 
                 // Append the new data to the buffer
                 buffer = new Uint8Array([...buffer, ...value]);
+
+                // Strip the beginning of the buffer until the first 0xAB byte
+                // This is done to ensure that the buffer does not contain any incomplete packets
+                while (buffer.length > 0 && buffer[0] !== 0xAB) {
+                    buffer = buffer.slice(1);
+                }
 
                 // Process packets while there's enough data in the buffer
                 while (buffer.length >= 4 && buffer[0] === 0xAB && buffer[1] === 0xCD) {
@@ -334,7 +341,7 @@ async function startFlasher() {
     }
 
     try {
-        const data = await readPacket(port, 0x18, 5000);
+        const data = await readPacket(port, 0x18, 1000);
         if (data[0] == 0x18) {
             console.log('Received 0x18 packet. Radio is ready for flashing.');
             console.log('0x18 packet data: ', data);
@@ -361,7 +368,7 @@ async function startFlasher() {
         if (error !== 'Reader has been cancelled.') {
             console.error('Error:', error);
         } else {
-            log('No data received, is the radio connected and in flash mode?');
+            log('No data received, is the radio connected and in flash mode? Please try again.');
         }
         return;
 

@@ -1,25 +1,4 @@
 modClasses = [
-    class Mod_Example extends FirmwareMod {
-        constructor() {
-
-            super("示例Mod", "这个 Mod 什么用都没有，被用作实现新 Mod 的示例", 0); // Add name, description and size (additional flash used, 0 for most mods)
-
-
-            this.hidden = true; // Set this to true for high-risk mods such as the "Enable TX everywhere" mod
-
-            // Customize the mod-specific div with input elements
-            // There is a helper function for adding input fields easily:
-            this.inputField1 = addInputField(this.modSpecificDiv, "示例 Mod 特定输入字段 1", "可编辑数据");
-        }
-
-        apply(firmwareData) {
-            log("The value of input field 1 is: " + this.inputField1.value);
-            // Implement the logic to apply the specific mod here
-            // You can use the mod-specific inputs in this.modSpecificDiv
-            return firmwareData;
-        }
-    }
-    ,
     class Mod_APP extends FirmwareMod {
         constructor() {
             super("Apps", "在现有固件中增加功能App，一些App通过手电筒键启动。由于固件大小限制，只能选择一个App:", "最大 2770");
@@ -416,6 +395,41 @@ modClasses = [
         }
     }
     ,
+    class Mod_CustomTXRange extends FirmwareMod {
+        constructor() {
+            super("Custom TX Range", "DANGER: This mod replaces the TX Disabled check with a simple function that either blocks a range of frequencies and allows all else, or vice versa. It can be used to do the same as 'Enable TX everywhere except Air Band', or it could also be used to make the radio only TX on PMR466. The preset values below are set to block Air Band and allow everything else.", 0);
+            this.hidden = true;
+
+            this.selectBlock = addRadioButton(this.modSpecificDiv, "The frequency range below will be blocked, everything else will be allowed. ", "selectBlock", "selectTXRange");
+            this.selectAllow = addRadioButton(this.modSpecificDiv, "The frequency range below will be allowed, everything else will be blocked. ", "selectAllow", "selectTXRange");
+            this.selectBlock.checked = true;
+            this.selectAllow.parentElement.classList.add("mb-3");
+
+            this.lowFreq = addInputField(this.modSpecificDiv, "Lower Limit (Hz)", "118000000");
+            this.highFreq = addInputField(this.modSpecificDiv, "Upper Limit (Hz)", "137000000");
+        }
+
+        apply(firmwareData) {
+            const offset = 0x1804;
+            let shellcode;
+            if (this.selectBlock.checked) {
+                shellcode = hexString("f0b5014649690968054a914205d3054a914202d20020c04301e00020ffe7f0bd1111111122222222");
+            } else if (this.selectAllow.checked) {
+                shellcode = hexString("F0B5014649690968054A914204D3054A914201D2002002E00020C043FFE7F0BD1111111122222222");
+            }
+            const dataView = new DataView(shellcode.buffer);
+            const lowFreq = Math.floor(this.lowFreq.value / 10);
+            const highFreq = Math.floor(this.highFreq.value / 10);
+            dataView.setUint32(32, lowFreq, true);
+            dataView.setUint32(36, highFreq, true);
+
+            firmwareData = replaceSection(firmwareData, shellcode, offset);
+            log(`Success: ${this.name} applied.`);
+
+            return firmwareData;
+        }
+    }
+    ,
     class Mod_BacklightDuration extends FirmwareMod {
         constructor() {
 
@@ -615,25 +629,86 @@ modClasses = [
         }
     }
     ,
-    class Mod_FrequencyRangeSimple extends FirmwareMod {
+    class Mod_FrequencyRangeAdvanced extends FirmwareMod {
         constructor() {
 
-            super("更大的频率范围", "将 RX 的频段 1 下限更改为 18 MHz，将频段 7 的上限更改为 1300 MHz。TX 范围不受影响。", 0);
+            super("自定义频率范围", "修改各频段频率范围。", 0);
+            this.selectSimple = addRadioButton(this.modSpecificDiv, "简单模式: 频段1最低频率修改为 18 MHz 频段7最高频率修改为 1300 MHz，这是芯片支持的最大范围。", "selectSimpleMode", "selectFrequencyRange");
+            this.selectCustom = addRadioButton(this.modSpecificDiv, "自定义模式: 手动更改各频段频率范围 ", "selectCustomMode", "selectFrequencyRange");
+            this.selectSimple.checked = true;
+
+            const customModeDiv = document.createElement("div");
+            customModeDiv.classList.add("d-none", "mt-2");
+
+            // add a brief explanation
+            const explanation = document.createElement("p");
+            explanation.innerText = "在这里修改频率范围，注意品各频段频率顺序正确、不要有重叠。 最大范围是 18 MHz to 1300 MHz，并且 630 - 840 MHz 由于芯片硬件限制实际无法收发。";
+            customModeDiv.appendChild(explanation);
+
+            this.band1L = addInputField(customModeDiv, "频段 1(F1) 下限频率 (Hz)", "50000000");
+            this.band1U = addInputField(customModeDiv, "频段 1(F1) 上限频率 (Hz)", "76000000");
+            this.band2L = addInputField(customModeDiv, "频段 2(F2) 下限频率 (Hz)", "108000000");
+            this.band2U = addInputField(customModeDiv, "频段 2(F2) 上限频率 (Hz)", "135999900");
+            this.band3L = addInputField(customModeDiv, "频段 3(F3) 下限频率 (Hz)", "136000000");
+            this.band3U = addInputField(customModeDiv, "频段 3(F3) 上限频率 (Hz)", "173999900");
+            this.band4L = addInputField(customModeDiv, "频段 4(F4) 下限频率 (Hz)", "174000000");
+            this.band4U = addInputField(customModeDiv, "频段 4(F4) 上限频率 (Hz)", "349999900");
+            this.band5L = addInputField(customModeDiv, "频段 5(F5) 下限频率 (Hz)", "350000000");
+            this.band5U = addInputField(customModeDiv, "频段 5(F5) 上限频率 (Hz)", "399999900");
+            this.band6L = addInputField(customModeDiv, "频段 6(F6) 下限频率 (Hz)", "400000000");
+            this.band6U = addInputField(customModeDiv, "频段 6(F6) 上限频率 (Hz)", "469999900");
+            this.band7L = addInputField(customModeDiv, "频段 7(F7) 下限频率 (Hz)", "470000000");
+            this.band7U = addInputField(customModeDiv, "频段 7(F7) 上限频率 (Hz)", "600000000");
+
+            this.modSpecificDiv.appendChild(customModeDiv);
+
+            this.selectCustom.parentElement.parentElement.addEventListener("change", () => {
+                customModeDiv.classList.toggle("d-none", !this.selectCustom.checked);
+            });
 
         }
 
         apply(firmwareData) {
-            const offset = 0xe074;
-            const oldData = hexString("404b4c0080cba4000085cf00c0800901c00e1602005a6202c029cd0280f77300f684cf00b6800901b60e1602f6596202b629cd0200879303");
-            const newData = hexString("40771b0080cba4000085cf00c0800901c00e1602005a6202c029cd0280f77300f684cf00b6800901b60e1602f6596202b629cd0280a4bf07");
-            if (compareSection(firmwareData, oldData, offset)) {
-                firmwareData = replaceSection(firmwareData, newData, offset);
-                log(`Success: ${this.name} applied.`);
+            if (this.selectSimple.checked) {
+                firmwareData = replaceSection(firmwareData, hexString("40771b0080cba4000085cf00c0800901c00e1602005a6202c029cd0280f77300f684cf00b6800901b60e1602f6596202b629cd0280a4bf07"), 0xE074);
             }
-            else {
-                log(`ERROR in ${this.name}: Unexpected data, already patched or wrong firmware?`);
+            else if (this.selectCustom.checked) {
+                const lowerFreqs = [
+                    Math.trunc(parseInt(this.band1L.value) * 0.1),
+                    Math.trunc(parseInt(this.band2L.value) * 0.1),
+                    Math.trunc(parseInt(this.band3L.value) * 0.1),
+                    Math.trunc(parseInt(this.band4L.value) * 0.1),
+                    Math.trunc(parseInt(this.band5L.value) * 0.1),
+                    Math.trunc(parseInt(this.band6L.value) * 0.1),
+                    Math.trunc(parseInt(this.band7L.value) * 0.1)
+                ];
+
+                const higherFreqs = [
+                    Math.trunc(parseInt(this.band1U.value) * 0.1),
+                    Math.trunc(parseInt(this.band2U.value) * 0.1),
+                    Math.trunc(parseInt(this.band3U.value) * 0.1),
+                    Math.trunc(parseInt(this.band4U.value) * 0.1),
+                    Math.trunc(parseInt(this.band5U.value) * 0.1),
+                    Math.trunc(parseInt(this.band6U.value) * 0.1),
+                    Math.trunc(parseInt(this.band7U.value) * 0.1)
+                ];
+
+                const buffer = new ArrayBuffer(4 * 7 * 2); // uint32, 7 bands, upper and lower limit
+                const dataView = new DataView(buffer);
+
+                for (let i = 0; i < lowerFreqs.length; i++) {
+                    dataView.setUint32(i * 4, lowerFreqs[i], true);
+                    dataView.setUint32(i * 4 + 28, higherFreqs[i], true); // upper limit table starts right after lower limit table
+                }
+
+                const freqsHex = new Uint8Array(buffer);
+                console.log(freqsHex);
+                console.log(uint8ArrayToHexString(freqsHex));
+
+                firmwareData = replaceSection(firmwareData, freqsHex, 0xE074);
             }
 
+            log(`Success: ${this.name} applied.`);
             return firmwareData;
         }
     }
@@ -739,7 +814,7 @@ modClasses = [
     }
     ,
     /*
-    class Mod_ChangeToneBurst extends FirmwareMod { // thanks to spm81
+    class Mod_ChangeToneBurst extends FirmwareMod {
         constructor() {
             super("1750Hz Tone Frequency", "The 1750Hz button sends a 1750Hz activation tone by default. To open NOAA channels (in combination with the NOAA frequencies mod on the receiving unit), you can use this mod to send a 1050Hz tone. Common repeater tone pulse frequencies are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
             this.toneValue = addInputField(this.modSpecificDiv, "Enter a new Tone Burst value in Hz from 1000-3950:", "1750");
@@ -751,9 +826,13 @@ modClasses = [
             const inputValue = parseInt(this.toneValue.value);
 
             if (!isNaN(inputValue) && inputValue >= minValue && inputValue <= maxValue) {
-                const newData = new Uint8Array([inputValue]);
-                console.log(newData);
-                firmwareData = replaceSection(firmwareData, newData, 0x29cc);
+                const newData = new Uint8Array(4);
+                const dataView = new DataView(newData.buffer);
+                dataView.setUint32(0, inputValue, true);
+
+                console.log(uint8ArrayToHexString(newData)); // value is correct
+
+                firmwareData = replaceSection(firmwareData, newData, 0x29cc); // does not seem to work
                 log(`Success: ${this.name} applied.`);
             }
             else {
@@ -762,8 +841,8 @@ modClasses = [
             return firmwareData;
         }
     }
-    ,
     */
+    ,
     class Mod_AMOnAllBands extends FirmwareMod {
         constructor() {
 
@@ -846,7 +925,7 @@ modClasses = [
             const offset = 0x5568;
             const freq = Math.trunc(parseInt(this.inputFreq1.value) * 0.1);
 
-            if (freq <= 0x04a67102 ) {
+            if (freq <= 0x04a67102) {
                 // Create an 8-byte buffer with the specified values
                 const buffer = new ArrayBuffer(4);
                 const dataView = new DataView(buffer);
