@@ -397,16 +397,16 @@ modClasses = [
     ,
     class Mod_CustomTXRange extends FirmwareMod {
         constructor() {
-            super("Custom TX Range", "DANGER: This mod replaces the TX Disabled check with a simple function that either blocks a range of frequencies and allows all else, or vice versa. It can be used to do the same as 'Enable TX everywhere except Air Band', or it could also be used to make the radio only TX on PMR466. The preset values below are set to block Air Band and allow everything else.", 0);
+            super("自定义可发射频率范围", "危险: 该Mod用一个简单的功能绕过了 TX 禁用检查，可以设置为与“在除航空频段以外的所有位置启用TX”相同功能，也可以用来限制仅在 PMR466 上TX。下面填写的预设值设置为“阻止航空频段发射，允许其他所有频段发射。", 0);
             this.hidden = true;
 
-            this.selectBlock = addRadioButton(this.modSpecificDiv, "The frequency range below will be blocked, everything else will be allowed. ", "selectBlock", "selectTXRange");
-            this.selectAllow = addRadioButton(this.modSpecificDiv, "The frequency range below will be allowed, everything else will be blocked. ", "selectAllow", "selectTXRange");
+            this.selectBlock = addRadioButton(this.modSpecificDiv, "以下范围内的频率禁止发射，范围外的允许发射。", "selectBlock", "selectTXRange");
+            this.selectAllow = addRadioButton(this.modSpecificDiv, "以下范围内的频率允许发射，范围外的禁止发射。 ", "selectAllow", "selectTXRange");
             this.selectBlock.checked = true;
             this.selectAllow.parentElement.classList.add("mb-3");
 
-            this.lowFreq = addInputField(this.modSpecificDiv, "Lower Limit (Hz)", "118000000");
-            this.highFreq = addInputField(this.modSpecificDiv, "Upper Limit (Hz)", "137000000");
+            this.lowFreq = addInputField(this.modSpecificDiv, "下限频率 (Hz)", "118000000");
+            this.highFreq = addInputField(this.modSpecificDiv, "上限频率 (Hz)", "137000000");
         }
 
         apply(firmwareData) {
