@@ -419,7 +419,7 @@ modClasses = [
             }
             const dataView = new DataView(shellcode.buffer);
             const lowFreq = Math.floor(this.lowFreq.value / 10);
-            const highFreq = Math.floor(this.highFreq.value / 10);
+            const highFreq = Math.floor(this.highFreq.value / 10) + 1; // highFreq check is >=, so we need to subtract 1 to include the last frequency
             dataView.setUint32(32, lowFreq, true);
             dataView.setUint32(36, highFreq, true);
 
@@ -813,7 +813,7 @@ modClasses = [
         }
     }
     ,
-    /*
+    /* THIS MOD DOES NOT WORK - ISSUE TRACKED HERE: https://github.com/amnemonic/Quansheng_UV-K5_Firmware/issues/85
     class Mod_ChangeToneBurst extends FirmwareMod {
         constructor() {
             super("1750Hz Tone Frequency", "The 1750Hz button sends a 1750Hz activation tone by default. To open NOAA channels (in combination with the NOAA frequencies mod on the receiving unit), you can use this mod to send a 1050Hz tone. Common repeater tone pulse frequencies are 1000Hz, 1450Hz, 1750Hz, 2100Hz", 0);
@@ -879,6 +879,8 @@ modClasses = [
             super("FM 收音机频率", "修改 FM 收音机频率范围", "0");
 
             this.select6476mhz = addRadioButton(this.modSpecificDiv, "64 - 76 MHz", "select6476mhz", "selectFm_radio");
+            this.select64108mhz = addRadioButton(this.modSpecificDiv, "64 - 108 MHz", "select64108mhz", "selectFm_radio");
+            this.select76108mhz = addRadioButton(this.modSpecificDiv, "76 - 108 MHz", "select76108mhz", "selectFm_radio");
             this.select87108mhz = addRadioButton(this.modSpecificDiv, "86.4 - 108 MHz", "select87108mhz", "selectFm_radio");
             this.select88108mhz = addRadioButton(this.modSpecificDiv, "88 - 108 MHz", "select88108mhz", "selectFm_radio");
 
@@ -886,7 +888,17 @@ modClasses = [
         }
 
         apply(firmwareData) {
-            if (this.select6476mhz.checked) {
+            if (this.select76108mhz.checked) {
+                firmwareData = replaceSection(firmwareData, hexString("5f0a0000"), 0xa274);
+                firmwareData = replaceSection(firmwareData, hexString("5f20c000"), 0xa2f4);
+                firmwareData = replaceSection(firmwareData, hexString("5f20c000"), 0x6452);
+                firmwareData = replaceSection(firmwareData, hexString("8721"), 0x6456);
+            }
+            else if (this.select64108mhz.checked) {
+                firmwareData = replaceSection(firmwareData, hexString("5f0a0000"), 0xa274);
+                firmwareData = replaceSection(firmwareData, hexString("5020c000"), 0x6452);
+            }
+            else if (this.select6476mhz.checked) {
                 const Reg05 = hexString("df0a0000");
                 const MOVSR0 = hexString("5020c000");
                 const MOVSR1 = hexString("5f21");

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -31,7 +31,7 @@
 
     .bg-animated {
       min-height: 100%;
-      background: linear-gradient(-45deg, #555555, #494949, #5e73b3, #4e73df);
+      background: linear-gradient(-45deg, #555555, #494949, #598647, #5cbb58);
       background-size: 400% 400%;
       background-attachment: fixed;
       animation: gradient 5s ease;
@@ -143,70 +143,21 @@
         <!-- Begin Page Content -->
         <div class="container mt-4" style="max-width: 1440px;">
 
-
           <div class="row">
             <div class="col-lg-12">
               <div class="card shadow mb-4">
                 <a href="#instructions" class="d-block card-header py-3" data-toggle="collapse" role="button">
-                  <h6 class="m-0 font-weight-bold text-primary">说明/h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Instructions</h6>
                 </a>
                 <div id="instructions" class="card-body collapse">
-                  <h2 class="mb-4">UVMOD Patcher & Flasher</h2>
-                  <p>此工具可为泉盛 UV-K5、UV-K6、UV-K5（8） UV-5R和UV-5R Plus 创建自定义固件，需要一根兼容的K头刷机线和驱动程序。</p>
+                  <h2 class="mb-4">UVMOD Configurator</h2>
+                  <p>This tool lets you edit the settings and channels of your radio from the comfort of your web
+                    browser. It serves as a platform independent replacement for the official CPS software. </p>
 
-
-                  <h3 class="mt-4">用法</h3>
-                  <ol>
-                    <li>选择所需的Mod并根据需要进行自定义。请参阅每个Mod的描述以了解用法。</li>
-                    <li>在右侧可以选择电台型号，但也可以将其设置为“所有型号”来创建一个绕过版本检查的通用固件。</li>
-                    <li>单击“打包”并观察控制台输出，其中将显示错误以及固件最终大小。如果你收到固件大小超大警告，你必须取消一些Mod然后重试。</li>
-                    <li>单击“保存”以下载打包完成的固件文件。</li>
-                  </ol>
-
-
-
-
-                  <h3 class="mt-4">直接使用UVMOD刷机</h3>
-                  <p>基于 Chromium 的浏览器（如 Chrome、Edge 和 Opera）内置 API允许UVMOD将固件直接刷新到电台。这是最简单的凡事，但仅适用于Windows和Linux。</p>
-                  <p>在 Windows 上，你需要使用包含ch340、ch341 或 cp210x 芯片的刷机线。在 Linux 上，通常已经包含了相关驱动。</p>
-                  <ol>
-
-                    <li>将刷机线连接到计算机，并确保安装了正确的驱动程序，正确的会显示 com 端口。</li>
-                    <li>在断开连接并关闭的手台上，按住PTT的同时打开手台。此时手电筒应该打开且屏幕为关闭保状态，手台处于刷机模式。</li>
-                    <li>将刷机线连接到手台。</li>
-                    <li>点击 "网页刷机" 并等待结束，相关信息会在控制台中显示。</li>
-                    <li>全部完成，您的所有设置仍应保持不变。</li>
-
-                  </ol>
-
-                  <h3 class="mt-4">使用官方工具刷机</h3>
-                  <p>如果您使用Windows，则可以使用官方更新程序工具。您可以直接从UVMOD控制台窗口中的链接下载使用。</p>
-
-                  <ol>
-                    <li>将刷机线连接到计算机，并确保安装了正确的驱动程序。在设备管理器，它应该显示为COM端口。</li>
-                    <li>启动更新程序工具，选择 COM 端口，然后单击连接。</li>
-                    <li>加载自定义固件。</li>
-                    <li>在断开连接并关闭的手台上，按住PTT的同时打开手台。此时手电筒应该打开且屏幕为关闭保状态，手台处于刷机模式。</li>
-                    <li>将刷机线连接到手台。更新程序工具中的“更新”按钮现在应该变得可点击。</li>
-                    <li>单击更新并等待工具完成。</li>
-                    <li>全部完成，您的所有设置仍应保持不变。</li>
-                  </ol>
-                  <h3 class="mt-4">隐藏 Mods</h3>
-                  <p>出于安全原因，有些 Mod 未在列表中列出，可以在此处启用。请详见以下警告：</p>
-                  <ul>
-
-                    <li><b>只有在您了无线电杂散的概念并拥有过滤它们的设备时才使用 发射修改 MODS！</b></li>
-                    <li><b>在任何情况下，都不要通过航空频段发射或干扰其他关键基础设施！</b></li>
-                    <li>以非法频率发射会导致巨额罚款甚至入狱。</li>
-                    <li>无线电硬件仅设计用于VHF和UHF。在其他频率上启用 TX 不会改变这一情况。在VHF和UHF频段之外的频率上将具有非常低的输出功率和非常高的SWR，这可能会损坏设备。同时设备会输出大量的杂散、杂散甚至比载波信号强。
-                      <b>例如，在CB频段上传输将在CB（微瓦）上传输无用的功率，同时在其他几个频率上发射大量功率。 </b></li>
-
-
-                    <li>你对自己的行为负全部责任！</li>
-
-                  </ul>
-                  <p>如果同意这些警告和条款，现在可以通过<a onclick="showHiddenMods()" class="card-link" style="cursor: pointer;"><b>单击此处</b></a>显示隐藏的 Mod。 </p>
-                  <p>Mod 将显示在列表中，并带有红色边框和标题。</p>
+                  <h3 class="mt-4">Usage</h3>
+                  <p>The configurator is currently under development. Right now it can only read the configuration of
+                    the radio and save it as a backup. The backup *should* be compatible with k5prog but as of now it is
+                    untested, so please avoid writing this backup to any radio just yet. </p>
 
                 </div>
 
@@ -222,14 +173,10 @@
               <div class="card shadow-lg mb-4">
                 <div class="card-header py-3 d-flex">
                   <div class="mr-auto">
-                    <h6 class="m-0 font-weight-bold text-primary">Mods</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Configuration</h6>
                   </div>
-                  <a style="line-height: 1 !important;" target="_blank" rel="nofollow"
-
-                    href="https://github.com/whosmatt/uvmod">贡献 Mods &rarr;</a>
-
                 </div>
-                <div id="modsContainer" class="card-body">
+                <div id="configContainer" class="card-body">
                 </div>
               </div>
             </div>
@@ -239,10 +186,8 @@
               <div class="card shadow mb-4 sticky-top" style="top: 1.5rem">
                 <div class="card-header py-3 d-flex">
                   <div class="mr-auto">
-                    <h6 class="m-0 font-weight-bold text-primary">控制台</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Console</h6>
                   </div>
-                  <a style="line-height: 1 !important;" target="_blank" rel="nofollow"
-                    href="fw/uvk5updater.zip">下载刷机工具 &rarr;</a>
                 </div>
                 <div class="card-body">
                   <div>
@@ -252,48 +197,32 @@
                   </div>
                   <div>
                     <div class="input-group mt-4">
-                      <div id="useDefaultFirmwareDiv" class="input-group-prepend" style="cursor:pointer">
+                      <div class="input-group-prepend">
                         <div class="input-group-text">
-                          <input id="useDefaultFirmware" type="checkbox" checked style="cursor: pointer;">
+                          <input id="automaticBackupCheckbox" style="cursor: pointer;" type="checkbox" checked>
                         </div>
                       </div>
-                      <div id="customFileInputDiv" class="custom-file d-none">
-                        <input id="customFileInput" type="file" class="custom-file-input">
-                        <label id="customFileLabel" class="custom-file-label" for="customFileInput">选择其他固件
-                          (仅v26)</label>
-                      </div>
-                      <span id="useDefaultFirmwareSpan" class="form-control" readonly>使用预置v26固件</span>
+                      <label for="automaticBackupCheckbox" class="form-control" readonly style="cursor: pointer;">Save
+                        automatic backup</label>
                     </div>
-                    <select class="form-control mt-2" id="firmwareVersionSelect">
-
-                      <option value="*">为所有型号打包</option>
-                      <option value="2">为UV-K5打包</option>
-                      <option value="3">为UV-K6, UV-K5(8)打包</option>
-                      <option value="4">为UV-5R Plus打包</option>
-
-                    </select>
+                  </div>
+                  <div class="custom-file mt-2">
+                    <input id="backupFileInput" type="file" class="custom-file-input" accept=".bin">
+                    <label id="backupFileLabel" class="custom-file-label" for="backupFileInput">Import backup</label>
                   </div>
 
-                  <div class="mt-2">
-                    <a id="patchButton" class="btn btn-primary btn-icon-split w-100">
-                      <span class="icon text-white-50">
-                        <i class="fas fa-wrench"></i>
-                      </span>
-                      <span class="text w-100">打包固件</span>
-                    </a>
-                  </div>
                   <div class="mt-2 d-flex">
-                    <a id="downloadButton" class="btn btn-dark btn-icon-split mr-1 disabled w-100">
+                    <a id="readConfigButton" class="btn btn-dark btn-icon-split mr-1 w-100">
                       <span class="icon text-white-50">
-                        <i class="fas fa-download"></i>
+                        <i class="fas fa-sign-out-alt"></i>
                       </span>
-                      <span class="text w-100">保存固件</span>
+                      <span class="text w-100">Read Config</span>
                     </a>
-                    <a id="flashButton" class="btn btn-dark btn-icon-split disabled w-100">
+                    <a id="writeConfigButton" class="btn btn-dark btn-icon-split disabled w-100">
                       <span class="icon text-white-50">
-                        <i class="fab fa-usb"></i>
+                        <i class="fas fa-sign-in-alt"></i>
                       </span>
-                      <span class="text w-100">网页刷机</span>
+                      <span class="text w-100">Write Config</span>
                     </a>
                   </div>
                 </div>
@@ -321,7 +250,7 @@
   <script src="js/vendor/jquery.min.js"></script>
   <script src="js/vendor/bootstrap.bundle.min.js"></script>
   <script src="js/vendor/bs-custom-file-input.min.js"></script>
-  <script async src="https://umami.zzz667.tk:20000/script.js" data-website-id="c488f030-cfc6-4a8b-8864-d0c91c8ce712"></script>
+
   <!-- Core plugin JavaScript-->
 
   <!-- Patcher JavaScript -->
@@ -329,7 +258,7 @@
   <script src="js/qsSerial.js"></script>
   <script src="js/modframework.js"></script>
   <script src="mods.js"></script>
-  <script src="js/tool_patcher.js"></script>
+  <script src="js/tool_configurator.js"></script>
 
   <!-- Easter egg, click the title -->
   <script>
